@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
-import { Paciente } from 'src/paciente/paciente.entity/paciente.entity';
+/* eslint-disable prettier/prettier */
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { PacienteEntity } from 'src/paciente/paciente.entity/paciente.entity';
 
 @Entity()
-export class Diagnostico {
+export class DiagnosticoEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -12,6 +13,6 @@ export class Diagnostico {
   @Column()
   descripcion: string;
 
-  @ManyToMany(() => Paciente, (paciente) => paciente.diagnosticos)
-  pacientes: Paciente[];
+  @ManyToMany(() => PacienteEntity, (paciente) => paciente.diagnosticos)
+  pacientes: PacienteEntity[];
 }

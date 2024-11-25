@@ -1,25 +1,23 @@
-
-
-
+/* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Paciente } from './entities/paciente.entity';
-import { Medico } from './entities/medico.entity';
+import { PacienteEntity } from 'src/paciente/paciente.entity/paciente.entity';
+import { MedicoEntity } from 'src/medico/medico.entity/medico.entity';
 
 @Injectable()
 export class MedicoPacienteService {
   constructor(
-    @InjectRepository(Paciente)
-    private readonly pacienteRepository: Repository<Paciente>,
-    @InjectRepository(Medico)
-    private readonly medicoRepository: Repository<Medico>,
+    @InjectRepository(PacienteEntity)
+    private readonly pacienteRepository: Repository<PacienteEntity>,
+    @InjectRepository(MedicoEntity)
+    private readonly medicoRepository: Repository<MedicoEntity>,
   ) {}
 
-  async addMedicoToPaciente(pacienteId: number, medicoId: number): Promise<Paciente> {
+  async addMedicoToPaciente(pacienteId: string, medicoId: string): Promise<PacienteEntity> {
     const paciente = await this.pacienteRepository.findOne({
       where: { id: pacienteId },
-      relations: ['medicos'], // Incluye los médicos ya asignados.
+      relations: ['medicos'], 
     });
     if (!paciente) {
       throw new NotFoundException(`El paciente con ID ${pacienteId} no existe.`);
@@ -34,7 +32,7 @@ export class MedicoPacienteService {
       throw new BadRequestException('Un paciente no puede tener más de 5 médicos asignados.');
     }
 
-    paciente.medicos.push(medico); // Añade el médico a la lista de médicos del paciente.
+    paciente.medicos.push(medico); 
     return await this.pacienteRepository.save(paciente);
   }
 

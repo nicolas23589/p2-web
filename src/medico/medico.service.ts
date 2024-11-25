@@ -1,24 +1,25 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Medico } from './medico.entity/medico.entity';
+import { MedicoEntity } from './medico.entity/medico.entity';
 
 @Injectable()
 export class MedicoService {
+  
   constructor(
-    @InjectRepository(Medico)
-    private readonly medicoRepository: Repository<Medico>,
+    @InjectRepository(MedicoEntity)
+    private readonly medicoRepository: Repository<MedicoEntity>,
   ) {}
 
-  async create(medico: Partial<Medico>): Promise<Medico> {
+  async create(medico: MedicoEntity): Promise<MedicoEntity> {
     if (!medico.nombre || !medico.especialidad) {
       throw new BadRequestException('Asegurate de que incluiste nombre y especialidad');
     }
-    const nuevoMedico = this.medicoRepository.create(medico);
-    return await this.medicoRepository.save(nuevoMedico);
+    return await this.medicoRepository.save(medico);
   }
 
-  async findOne(id: string): Promise<Medico> {
+  async findOne(id: string): Promise<MedicoEntity> {
     const medico = await this.medicoRepository.findOne({
       where: { id },
       relations: ['pacientes'], 
@@ -29,15 +30,15 @@ export class MedicoService {
     return medico;
   }
 
-  async findAll(): Promise<Medico[]> {
+  async findAll(): Promise<MedicoEntity[]> {
     return await this.medicoRepository.find({ relations: ['pacientes'] });
   }
 
   async delete(id: string): Promise<void> {
     const medico = await this.findOne(id);
     if (medico.pacientes && medico.pacientes.length > 0) {
-      throw new BadRequestException('No se puede eliminar un médico con pacientes asociados.');
+      throw new BadRequestException('No se puede eliminar un médico con al menos un pacientes asociados.');
     }
     await this.medicoRepository.delete(id);
-  }
+  } 
 }

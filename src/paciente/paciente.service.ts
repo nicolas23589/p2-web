@@ -1,16 +1,17 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Paciente } from './paciente.entity/paciente.entity';
+import { PacienteEntity } from './paciente.entity/paciente.entity';
 
 @Injectable()
 export class PacienteService {
   constructor(
-    @InjectRepository(Paciente)
-    private readonly pacienteRepository: Repository<Paciente>,
+    @InjectRepository(PacienteEntity)
+    private readonly pacienteRepository: Repository<PacienteEntity>,
   ) {}
 
-  async create(paciente: Partial<Paciente>): Promise<Paciente> {
+  async create(paciente: Partial<PacienteEntity>): Promise<PacienteEntity> {
     if (paciente.nombre.length < 3) {
       throw new BadRequestException('El nombre del paciente debe tener al menos 3 caracteres.');
     }
@@ -18,10 +19,10 @@ export class PacienteService {
     return await this.pacienteRepository.save(nuevoPaciente);
   }
 
-  async findOne(id: string): Promise<Paciente> {
+  async findOne(id: string): Promise<PacienteEntity> {
     const paciente = await this.pacienteRepository.findOne({
       where: { id },
-      relations: ['diagnosticos'], // Incluye los diagnósticos asociados.
+      relations: ['diagnosticos'], 
     });
     if (!paciente) {
       throw new NotFoundException(`El paciente con ID ${id} no existe.`);
@@ -29,7 +30,7 @@ export class PacienteService {
     return paciente;
   }
 
-  async findAll(): Promise<Paciente[]> {
+  async findAll(): Promise<PacienteEntity[]> {
     return await this.pacienteRepository.find({ relations: ['diagnosticos'] });
   }
 

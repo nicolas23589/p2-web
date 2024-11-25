@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable} from 'typeorm';
-import { Medico } from 'src/medico/medico.entity/medico.entity';
-import { Diagnostico } from 'src/diagnostico/diagnostico.entity/diagnostico.entity';
+/* eslint-disable prettier/prettier */
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable} from 'typeorm';
+import { MedicoEntity } from 'src/medico/medico.entity/medico.entity';
+import { DiagnosticoEntity } from 'src/diagnostico/diagnostico.entity/diagnostico.entity';
 
 @Entity()
-export class Paciente {
+export class PacienteEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -13,10 +14,10 @@ export class Paciente {
   @Column()
   nombre: string;
 
-  @ManyToMany(() => Medico, (medico) => medico.pacientes)
-  medicos: Medico[];
+  @ManyToMany(() => MedicoEntity, (medico) => medico.pacientes)
+  medicos: MedicoEntity[];
 
-  @ManyToMany(() => Diagnostico, (diagnostico) => diagnostico.pacientes)
+  @ManyToMany(() => DiagnosticoEntity, (diagnostico) => diagnostico.pacientes)
   @JoinTable()
-  diagnosticos: Diagnostico[];
+  diagnosticos: DiagnosticoEntity[];
 }
