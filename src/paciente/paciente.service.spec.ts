@@ -1,53 +1,89 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { PacienteService } from './paciente.service';
-import { PacienteEntity } from './paciente.entity/paciente.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BadRequestException } from '@nestjs/common';
 import { TypeOrmTestingConfig } from '../shared/testing-utils/typeorm-testing-config';
+import { PacienteEntity } from './paciente.entity';
+import { PacienteService } from './paciente.service';
+import { faker } from '@faker-js/faker';
+import { BusinessLogicException, BusinessError } from '../shared/errors/bussiness-errors';
+import { MedicoEntity } from '../medico/medico.entity';
+import { DiagnosticoEntity } from '../diagnostico/diagnostico.entity';
 
-describe('PacienteService', () => {
+describe('Test PacienteService', () => {
   let service: PacienteService;
+
   let repository: Repository<PacienteEntity>;
+  let pacientesList: PacienteEntity[];
+
+  let medicoRepository: Repository<MedicoEntity>;
+  let diagnosticoRepository: Repository<DiagnosticoEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [...TypeOrmTestingConfig()],
-      providers: [
-        PacienteService,
-        {
-          provide: getRepositoryToken(PacienteEntity),
-          useClass: Repository,
-        },
-      ],
+      providers: [PacienteService],
     }).compile();
 
     service = module.get<PacienteService>(PacienteService);
     repository = module.get<Repository<PacienteEntity>>(getRepositoryToken(PacienteEntity));
+    medicoRepository = module.get<Repository<MedicoEntity>>(getRepositoryToken(MedicoEntity));
+    diagnosticoRepository = module.get<Repository<DiagnosticoEntity>>(getRepositoryToken(DiagnosticoEntity));
+    await seedDatabase();
   });
 
-  describe('create', () => {
-    it('debería crear un paciente correctamente', async () => {
-      const pacienteData = { nombre: 'Juan', genero: 'masculino', medicos:[], diagnosticos:[] };
-      const paciente: PacienteEntity = { id: '1', ...pacienteData };
+  const seedDatabase = async () => {
+    repository.clear();
+    pacientesList = [];
+    for (let i = 0; i < 5; i++) {
+      const paciente: PacienteEntity = await repository.save({
+        nombre: faker.name.firstName(),
+        genero: faker.name.gender(),
+        medicos: [], 
+        diagnosticos: [], 
+      });
+      pacientesList.push(paciente);
+    }
+  };
 
-      jest.spyOn(repository, 'create').mockReturnValue(paciente);
-      jest.spyOn(repository, 'save').mockResolvedValue(paciente);
-
-      const result = await service.create(pacienteData);
-
-      expect(result).toEqual(paciente);
-      expect(repository.create).toHaveBeenCalledWith(pacienteData);
-      expect(repository.save).toHaveBeenCalledWith(paciente);
-    });
-
-    it('bussines exepcion si nombre <3 caracteres', async () => {
-      const pacienteData = { nombre: 'xd', genero: 'masculino', medicos:[], diagnosticos:[] };
-
-      await expect(service.create(pacienteData)).rejects.toThrowError(
-        new BadRequestException('El nombre del paciente debe tener al menos 3 caracteres.')
-      );
-    });
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
+
+  it('Crear un nuevo paciente', async () => {
+    
+    const paciente: PacienteEntity = {
+      id: "",
+      nombre: faker.name.firstName(),
+      genero: faker.name.gender(),
+      medicos: [],  
+      diagnosticos: [],  
+    };
+
+    const newPaciente: PacienteEntity = await service.create(paciente);
+    expect(newPaciente).not.toBeNull();
+
+    const storedPaciente: PacienteEntity = await repository.findOne({where:{id:newPaciente.id}});
+    expect(storedPaciente).not.toBeNull();
+    expect(storedPaciente.nombre).toEqual(newPaciente.nombre);
+
+    expect(storedPaciente.genero).toEqual(newPaciente.genero);
+  });
+
+  it('verificar la regla de 3 caracteres', async () => {
+    const paciente: PacienteEntity = {
+      id: "",
+      genero: faker.name.gender(),
+      nombre: "xd",  
+      medicos: [],
+      diagnosticos: [],
+    };
+
+    await expect(() => service.create(paciente)).rejects.toThrowError(
+      new BusinessLogicException('asegurese de que el nombre tenga 3 caracteres o mas', BusinessError.BAD_REQUEST)
+    );
+  });
+
+
+
 });

@@ -2,7 +2,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DiagnosticoEntity } from './diagnostico.entity/diagnostico.entity';
+import { DiagnosticoEntity } from './diagnostico.entity';
 
 @Injectable()
 export class DiagnosticoService {

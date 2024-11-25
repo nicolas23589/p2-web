@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* archivo src/shared/testing-utils/typeorm-testing-config.ts*/
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PacienteEntity } from 'src/paciente/paciente.entity/paciente.entity';
-import { MedicoEntity } from 'src/medico/medico.entity/medico.entity';
-import { DiagnosticoEntity } from 'src/diagnostico/diagnostico.entity/diagnostico.entity';
+import { PacienteEntity } from '../../paciente/paciente.entity';
+import { MedicoEntity } from '../../medico/medico.entity';
+import { DiagnosticoEntity } from '../../diagnostico/diagnostico.entity';
 
 
 export const TypeOrmTestingConfig = () => [

@@ -2,7 +2,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PacienteEntity } from './paciente.entity/paciente.entity';
+import { PacienteEntity } from './paciente.entity';
 
 @Injectable()
 export class PacienteService {
@@ -11,12 +11,11 @@ export class PacienteService {
     private readonly pacienteRepository: Repository<PacienteEntity>,
   ) {}
 
-  async create(paciente: Partial<PacienteEntity>): Promise<PacienteEntity> {
+  async create(paciente: PacienteEntity): Promise<PacienteEntity> {
     if (paciente.nombre.length < 3) {
-      throw new BadRequestException('El nombre del paciente debe tener al menos 3 caracteres.');
+      throw new BadRequestException('asegurese de que el nombre tenga 3 caracteres o mas');
     }
-    const nuevoPaciente = this.pacienteRepository.create(paciente);
-    return await this.pacienteRepository.save(nuevoPaciente);
+    return await this.pacienteRepository.save(paciente);
   }
 
   async findOne(id: string): Promise<PacienteEntity> {

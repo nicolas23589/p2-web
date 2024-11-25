@@ -2,7 +2,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MedicoEntity } from './medico.entity/medico.entity';
+import { MedicoEntity } from './medico.entity';
 
 @Injectable()
 export class MedicoService {

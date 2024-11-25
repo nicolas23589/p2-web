@@ -1,5 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
+import { DiagnosticoController } from './diagnostico.controller';
 
-@Module({})
+@Module({
+  controllers: [DiagnosticoController]
+})
 export class DiagnosticoModule {}
