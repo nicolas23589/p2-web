@@ -10,7 +10,7 @@ import {
     HttpCode,
     HttpStatus,
   } from '@nestjs/common';
-  import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors/business-errors.interceptor';
+  import { BusinessErrorsInterceptor } from '../shared/interceptors/business-errors/business-errors.interceptor';
   import { DiagnosticoService } from './diagnostico.service';
   import { DiagnosticoEntity } from './diagnostico.entity';
   

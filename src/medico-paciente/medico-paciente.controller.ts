@@ -7,7 +7,7 @@ import {
     HttpStatus,
     UseInterceptors,
   } from '@nestjs/common';
-  import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors/business-errors.interceptor';
+  import { BusinessErrorsInterceptor } from '../shared/interceptors/business-errors/business-errors.interceptor';
   import { MedicoPacienteService } from './medico-paciente.service';
   import { PacienteEntity } from '../paciente/paciente.entity';
   

@@ -11,7 +11,7 @@ import {
     HttpStatus,
   } from '@nestjs/common';
   import { PacienteService } from './paciente.service';
-  import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors/business-errors.interceptor';
+  import { BusinessErrorsInterceptor } from '../shared/interceptors/business-errors/business-errors.interceptor';
   import { PacienteEntity } from './paciente.entity';
   
   @Controller('paciente')

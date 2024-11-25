@@ -10,8 +10,8 @@ import {
     HttpCode,
     HttpStatus,
   } from '@nestjs/common';
-  import { BusinessErrorsInterceptor } from 'src/shared/interceptors/business-errors/business-errors.interceptor';
-  import { MedicoService } from './medico.service';
+  import { BusinessErrorsInterceptor } from '../shared/interceptors/business-errors/business-errors.interceptor';
+    import { MedicoService } from './medico.service';
   import { MedicoEntity } from './medico.entity';
   
   @Controller('medico')
